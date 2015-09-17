@@ -11,7 +11,7 @@ $.fn.dataTable.epResponsive = function ( inst ) {
 	var api = new $.fn.dataTable.Api( inst );
 	var settings = api.settings()[0];
 	var columns = settings.oInit.columns;
-	var CELL_FONT_SIZE = $(api.cell(0).node()).css("font-size");
+	var CELL_FONT_SIZE = Number($(api.table().body()).css("font-size").match(/(\d+)*/)[0]);
 	var errorLogged = false;
 	var that = this;
 
@@ -31,6 +31,7 @@ $.fn.dataTable.epResponsive = function ( inst ) {
 					errorLogged = true;
 				}
 			}
+			
 			if(totalWidth < tableWidth) {
 				api.column(i).visible(true);
 			} else {
