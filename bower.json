@@ -11,12 +11,11 @@
     "component"
   ],
   "license": "MIT",
-  "ignore": [
-    "*",
-    "!datatables.epResponsive.js"
-  ],
   "dependencies": {
     "jquery": ">=1.7.0",
     "datatables": "~1.10.7"
-  }
+  },
+  "authors": [
+    "Jason Gardella <jason.a.gardella@gmail.com>"
+  ]
 }
