@@ -16,6 +16,11 @@ $.fn.dataTable.epResponsive = function ( inst ) {
 	var CELL_FONT_SIZE = Number($(api.table().body()).css("font-size").match(/(\d+)*/)[0]);
 	var errorLogged = false;
 	var that = this;
+	
+	// use default font size of 14px
+	if(CELL_FONT_SIZE === 0) {
+		CELL_FONT_SIZE = 14;
+	}
 
 	// calls all resize callbacks
 	this._call_resize_callbacks = function () {
