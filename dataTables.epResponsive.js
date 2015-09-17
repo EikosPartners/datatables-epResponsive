@@ -7,14 +7,14 @@
 
 (function(window, document, $, undefined) {
 
-var CELL_FONT_SIZE = 14;
-
 $.fn.dataTable.epResponsive = function ( inst ) {
 	var api = new $.fn.dataTable.Api( inst );
 	var settings = api.settings()[0];
 	var columns = settings.oInit.columns;
+	var CELL_FONT_SIZE = $(api.cell(0).node()).css("font-size");
+	var errorLogged = false;
 	var that = this;
-	
+
 	// hides columns that cannot fit within the table container's width
 	this._resize_cols = function () {
 		var totalWidth = 0;
@@ -22,7 +22,15 @@ $.fn.dataTable.epResponsive = function ( inst ) {
 		
 		for(var i = 0; i < columns.length; i++) {
 			// table width is stored as string in em units (e.g. "10em")
-			totalWidth += Number(columns[i].width.match(/(\d+)*/)[0]) * CELL_FONT_SIZE;
+			if(columns[i].width) {
+				totalWidth += Number(columns[i].width.match(/(\d+)*/)[0]) * CELL_FONT_SIZE;
+			} else {
+				totalWidth += CELL_FONT_SIZE;
+				if(!errorLogged) {
+					console.error("Column #" + i + " should have width property. Using default of 1em.");
+					errorLogged = true;
+				}
+			}
 			if(totalWidth < tableWidth) {
 				api.column(i).visible(true);
 			} else {
