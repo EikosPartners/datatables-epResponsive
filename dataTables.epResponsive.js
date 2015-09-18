@@ -16,22 +16,23 @@ $.fn.dataTable.epResponsive = function ( inst ) {
 	var CELL_FONT_SIZE = Number($(api.table().body()).css("font-size").match(/(\d+)*/)[0]);
 	var errorLogged = false;
 	var that = this;
-	
+
 	// use default font size of 14px
 	if(CELL_FONT_SIZE === 0) {
 		CELL_FONT_SIZE = 14;
 	}
 
 	// calls all resize callbacks
-	this._call_resize_callbacks = function () {
+	this._call_resize_callbacks = function (visibleColumns) {
 		callbacks.forEach(function (callback) {
-			callback();
+			callback(visibleColumns);
 		});
 	};
 
 	// hides columns that cannot fit within the table container's width
 	this._resize_cols = function () {
 		var totalWidth = 0;
+		var visibleColumns = 0;
 		var tableWidth = $(api.table().container()).width();
 		var visibilityChanged = false;
 		
@@ -53,6 +54,7 @@ $.fn.dataTable.epResponsive = function ( inst ) {
 				}
 				api.column(i).visible(true);
 				columns[i].visible = true;
+				visibleColumns++;
 			} else {
 				if(api.column(i).visible() !== false) {
 					visibilityChanged = true;
@@ -64,7 +66,7 @@ $.fn.dataTable.epResponsive = function ( inst ) {
 
 		// only call resize callbacks if visibility actually changed
 		if(visibilityChanged) {
-			this._call_resize_callbacks();
+			this._call_resize_callbacks(visibleColumns);
 		}
 	};
 	
