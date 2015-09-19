@@ -23,19 +23,18 @@ $.fn.dataTable.epResponsive = function ( inst ) {
 	}
 
 	// calls all resize callbacks
-	this._call_resize_callbacks = function (visibleColumns) {
+	this._call_resize_callbacks = function (hiddenColumns) {
 		callbacks.forEach(function (callback) {
-			callback(visibleColumns);
+			callback(hiddenColumns);
 		});
 	};
 
 	// hides columns that cannot fit within the table container's width
 	this._resize_cols = function () {
 		var totalWidth = 0;
-		var visibleColumns = 0;
 		var tableWidth = $(api.table().container()).width();
 		var visibilityChanged = false;
-		
+		var hiddenColumns = [];
 		for(var i = 0; i < columns.length; i++) {
 			// table width is stored as string in em units (e.g. "10em")
 			if(columns[i].width) {
@@ -54,19 +53,19 @@ $.fn.dataTable.epResponsive = function ( inst ) {
 				}
 				api.column(i).visible(true);
 				columns[i].visible = true;
-				visibleColumns++;
 			} else {
 				if(api.column(i).visible() !== false) {
 					visibilityChanged = true;
 				}
 				api.column(i).visible(false);
 				columns[i].visible = false;
+				hiddenColumns.push(columns[i]);
 			}
 		}
-
 		// only call resize callbacks if visibility actually changed
 		if(visibilityChanged) {
-			this._call_resize_callbacks(visibleColumns);
+			
+			this._call_resize_callbacks(hiddenColumns);
 		}
 	};
 	
@@ -77,7 +76,12 @@ $.fn.dataTable.epResponsive = function ( inst ) {
 	
 	// resize columns on table init
 	api.on("init.dt", function () {
-		that._resize_cols();	
+		
+		//push this to the end of the stack
+		setTimeout(function () {
+        	that._resize_cols();
+        });
+			
 	});
 	
 	if (settings._responsive ) {
