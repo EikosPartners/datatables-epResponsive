@@ -9,7 +9,7 @@ Install using bower
 # Usage
 
 Include the feature letter `R` on the dom option. An array of the column definitions should be pushed to the datatables settings object, named `columns`. Each column in the array should
-have a width defined in em units in a string (e.g. "10em"). Make sure to disable the autoWidth feature on the datatable, as this will interfere with the column sizing.
+have a width defined in either em, %, or px units. Make sure to disable the autoWidth feature on the datatable, as this will interfere with the column sizing.
 
 # GitHub
 

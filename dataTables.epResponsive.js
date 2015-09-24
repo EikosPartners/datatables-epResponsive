@@ -27,9 +27,16 @@ $.fn.dataTable.epResponsive = function ( inst ) {
 		CELL_FONT_SIZE = 14;
 	}
 	
-	// parses width string to number (e.g. "10em" to 140, assuming cell font size of 14)
+	// parses width string to number. width can be provided in em, % or px
 	this._parse_width = function (widthString) {
-		return Number(widthString.match(/(\d+)*/)[0]) * CELL_FONT_SIZE;
+		var match = widthString.match(/(^[0-9]+)(.*$)/);
+		if(match[2] === "em") {
+			return Number(match[1]) * CELL_FONT_SIZE;
+		} else if(match[2] === "%") {
+			return Math.round(Number(match[1]) / 100 * CELL_FONT_SIZE);
+		} else if(match[2] === "px") {
+			return Number(match[1]);
+		}
 	}
 
 	// calculates the initial value for total width.
@@ -46,7 +53,7 @@ $.fn.dataTable.epResponsive = function ( inst ) {
 	
 	// sets the visibility of the column in datatables and in the metadata to the given value
 	this._set_column_visibility = function(idx, visible) {
-		api.column(idx).visible(visible);
+		api.column(idx).visible(visible, false); // disable redraw for performance
 		columns[idx].visible = visible;
 	}
 
@@ -95,6 +102,9 @@ $.fn.dataTable.epResponsive = function ( inst ) {
 				fixedColumnsOverflow -= that._parse_width(columns[i].width);
 			}
 		}
+		
+		// perform redraw now
+		api.columns.adjust().draw( false );
 		
 		// only call resize callbacks if visibility actually changed
 		if(visibilityChanged) {
