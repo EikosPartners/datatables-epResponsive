@@ -7,27 +7,25 @@
 
 (function(window, document, $, undefined) {
 	
-var callbacks = [];
+var resizeCallback;
 
 $.fn.dataTable.epResponsive = function ( inst ) {
 	var api = new $.fn.dataTable.Api( inst );
 	var settings = api.settings()[0];
 	var columns = settings.oInit.columns;
 	var CELL_FONT_SIZE = Number($(api.table().body()).css("font-size").match(/(\d+)*/)[0]);
+	var ERROR_PREFIX = "epResponsive (" + settings.sTableId + "): ";
 	var errorLogged = false;
 	var that = this;
+
+	if(settings.oFeatures.bAutoWidth) {
+		console.error(ERROR_PREFIX + "Auto Width should be disabled.")
+	}
 
 	// use default font size of 14px
 	if(CELL_FONT_SIZE === 0) {
 		CELL_FONT_SIZE = 14;
 	}
-
-	// calls all resize callbacks
-	this._call_resize_callbacks = function (hiddenColumns) {
-		callbacks.forEach(function (callback) {
-			callback(hiddenColumns);
-		});
-	};
 	
 	// parses width string to number (e.g. "10em" to 140, assuming cell font size of 14)
 	this._parse_width = function (widthString) {
@@ -67,7 +65,7 @@ $.fn.dataTable.epResponsive = function ( inst ) {
 				} else {
 					totalWidth += CELL_FONT_SIZE;
 					if(!errorLogged) {
-						console.error("Column #" + i + " should have width property. Using default of 1em.");
+						console.error(ERROR_PREFIX + "Column #" + i + " should have width property. Using default of 1em.");
 						errorLogged = true;
 					}
 				}
@@ -100,7 +98,7 @@ $.fn.dataTable.epResponsive = function ( inst ) {
 		
 		// only call resize callbacks if visibility actually changed
 		if(visibilityChanged) {
-			this._call_resize_callbacks(hiddenColumns);
+			resizeCallback(hiddenColumns);
 		}
 	};
 	
@@ -140,7 +138,7 @@ $.fn.dataTable.Api.register( 'epResponsive()', function () {} );
 
 // Resize callback registration method.
 $.fn.dataTable.Api.register( 'epResponsive.onResize()', function ( callback ) {
-	callbacks.push(callback);
+	resizeCallback = callback;
 });
 
 })(window, document, jQuery);
