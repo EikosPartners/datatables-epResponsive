@@ -113,7 +113,7 @@ $.fn.dataTable.epResponsive = function ( inst ) {
 	};
 	
 	// resize columns on window resize
-	$(window).resize(function () {
+	$(window).on("resize.epR", function () {
 		that._resize_cols();
 	});
 	
@@ -125,6 +125,12 @@ $.fn.dataTable.epResponsive = function ( inst ) {
         	that._resize_cols();
         });
 			
+	});
+	
+	// clean up on table destroy
+	api.on("destroy.dt", function () {
+		$(window).off("resize.epR");
+		resizeCallback = null;
 	});
 	
 	if (settings._responsive ) {
