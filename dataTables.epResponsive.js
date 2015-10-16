@@ -7,7 +7,8 @@
 
 (function(window, document, $, undefined) {
 	
-var resizeCallback;
+var resizeCallback,
+	responsiveOptions;
 
 $.fn.dataTable.epResponsive = function ( inst ) {
 	var api = new $.fn.dataTable.Api( inst );
@@ -53,8 +54,10 @@ $.fn.dataTable.epResponsive = function ( inst ) {
 	
 	// sets the visibility of the column in datatables and in the metadata to the given value
 	this._set_column_visibility = function(idx, visible) {
-		api.column(idx).visible(visible, false); // disable redraw for performance
-		columns[idx].visible = visible;
+		if(idx < columns.length) {
+			api.column(idx).visible(visible, false); // disable redraw for performance
+			columns[idx].visible = visible;
+		}
 	}
 
 	// hides columns that cannot fit within the table container's width
@@ -99,7 +102,17 @@ $.fn.dataTable.epResponsive = function ( inst ) {
 					visibilityChanged = true;
 				}
 				that._set_column_visibility(i, false);
+				hiddenColumns.push(columns[i]);
 				fixedColumnsOverflow -= that._parse_width(columns[i].width);
+			}
+		}
+		
+		// hide columns that should be hidden when all columns are being shown
+		if(hiddenColumns.length === 0) {
+			if(Array.isArray(responsiveOptions.hideWhenAllColumnsAreVisible)) {
+				responsiveOptions.hideWhenAllColumnsAreVisible.forEach(function (col) {
+					that._set_column_visibility(col, false);
+				});
 			}
 		}
 		
@@ -155,6 +168,11 @@ $.fn.dataTable.Api.register( 'epResponsive()', function () {} );
 // Resize callback registration method.
 $.fn.dataTable.Api.register( 'epResponsive.onResize()', function ( callback ) {
 	resizeCallback = callback;
+});
+
+// Set options.
+$.fn.dataTable.Api.register( 'epResponsive.setOptions()', function ( options ) {
+	responsiveOptions = options;
 });
 
 })(window, document, jQuery);
