@@ -20,7 +20,8 @@
 	(function(window, document, $, undefined) {
 		
 	var resizeCallback,
-		responsiveOptions;
+		responsiveOptions,
+		ignoreColumns;
 	
 	$.fn.dataTable.epResponsive = function ( inst ) {
 		var api = new $.fn.dataTable.Api( inst );
@@ -30,6 +31,10 @@
 		var ERROR_PREFIX = "epResponsive (" + settings.sTableId + "): ";
 		var errorLogged = false;
 		var that = this;
+		
+		ignoreColumns = columns.map(function() {
+			return false;
+		})
 	
 		if(settings.oFeatures.bAutoWidth) {
 			console.error(ERROR_PREFIX + "Auto Width should be disabled.")
@@ -81,35 +86,37 @@
 			var fixedColumnsOverflow = totalWidth - tableWidth;
 			
 			for(var i = 0; i < columns.length; i++) {
-				if(!columns[i].fixed) {
-					if(columns[i].width) {
-						totalWidth += that._parse_width(columns[i].width);
-					} else {
-						totalWidth += CELL_FONT_SIZE;
-						if(!errorLogged) {
-							console.error(ERROR_PREFIX + "Column #" + i + " should have width property. Using default of 1em.");
-							errorLogged = true;
+				if(!ignoreColumns[i]) {
+					if(!columns[i].fixed) {
+						if(columns[i].width) {
+							totalWidth += that._parse_width(columns[i].width);
+						} else {
+							totalWidth += CELL_FONT_SIZE;
+							if(!errorLogged) {
+								console.error(ERROR_PREFIX + "Column #" + i + " should have width property. Using default of 1em.");
+								errorLogged = true;
+							}
 						}
 					}
-				}
-				
-				if(totalWidth < tableWidth || columns[i].fixed) {
-					if(columns[i].visible !== true) {
-						visibilityChanged = true;
+					
+					if(totalWidth < tableWidth || columns[i].fixed) {
+						if(columns[i].visible !== true) {
+							visibilityChanged = true;
+						}
+						that._set_column_visibility(i, true);
+					} else {
+						if(columns[i].visible !== false) {
+							visibilityChanged = true;
+						}
+						that._set_column_visibility(i, false);
+						hiddenColumns.push(columns[i]);
 					}
-					that._set_column_visibility(i, true);
-				} else {
-					if(columns[i].visible !== false) {
-						visibilityChanged = true;
-					}
-					that._set_column_visibility(i, false);
-					hiddenColumns.push(columns[i]);
 				}
 			}
 			
 			// hide fixed columns if needed
 			for(var i = columns.length - 1; i >= 0 && fixedColumnsOverflow > 0; i--) {
-				if(columns[i].fixed) {
+				if(!ignoreColumns[i] && columns[i].fixed) {
 					if(columns[i].visible !== false) {
 						visibilityChanged = true;
 					}
@@ -185,6 +192,14 @@
 	// Set options.
 	$.fn.dataTable.Api.register( 'epResponsive.setOptions()', function ( options ) {
 		responsiveOptions = options;
+	});
+	
+	// Set whether epResponsive should ignore the given column when doing calculations.
+	// Use this when you want to manage a column's visibility manually.
+	$.fn.dataTable.Api.register( 'epResponsive.setIgnoreColumn()', function ( index, bIgnore ) {
+		if(ignoreColumns && index < ignoreColumns.length) {
+			ignoreColumns[index] = bIgnore;
+		}
 	});
 	
 	})(window, document, jQuery);

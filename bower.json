@@ -1,6 +1,6 @@
 {
   "name": "datatables-epResponsive",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "homepage": "https://github.com/EikosPartners/datatables-epResponsive",
   "description": "Responsive plugin for datatables allowing column width definition through metadata",
   "main": "dataTables.epResponsive.js",
