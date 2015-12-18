@@ -73,7 +73,6 @@
 		this._set_column_visibility = function(idx, visible) {
 			if(idx < columns.length) {
 				api.column(idx).visible(visible, false); // disable redraw for performance
-				columns[idx].visible = visible;
 			}
 		}
 	
@@ -100,12 +99,12 @@
 					}
 					
 					if(totalWidth < tableWidth || columns[i].fixed) {
-						if(columns[i].visible !== true) {
+						if(api.column(i).visible() !== true) {
 							visibilityChanged = true;
 						}
 						that._set_column_visibility(i, true);
 					} else {
-						if(columns[i].visible !== false) {
+						if(api.column(i).visible() !== false) {
 							visibilityChanged = true;
 						}
 						that._set_column_visibility(i, false);
@@ -117,7 +116,7 @@
 			// hide fixed columns if needed
 			for(var i = columns.length - 1; i >= 0 && fixedColumnsOverflow > 0; i--) {
 				if(!ignoreColumns[i] && columns[i].fixed) {
-					if(columns[i].visible !== false) {
+					if(api.column(i).visible() !== false) {
 						visibilityChanged = true;
 					}
 					that._set_column_visibility(i, false);
