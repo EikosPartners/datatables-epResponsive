@@ -4,7 +4,7 @@ The epResponsive plug-in allows columns to be hidden as the window is resized, u
 
 # Installation
 
-Install using bower
+Install using bower or npm
 
 # Usage
 
