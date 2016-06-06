@@ -2,9 +2,9 @@
   "name": "datatables-epResponsive",
   "version": "0.0.0",
   "description": "The epResponsive plugin allows columns to be hidding as the window is resized, using metadata-defined column widths for the column definitions",
-  "main": "dataTables.epResponsive.js",
+  "main": "dist/dataTables.epResponsive.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "babel src/ --presets babel-preset-es2015 --out-dir dist/ --source-maps"
   },
   "repository": {
     "type": "git",
@@ -16,7 +16,11 @@
     "url": "https://github.com/EikosPartners/datatables-epResponsive/issues"
   },
   "dependencies": {
-    "jquery" : ">=1.7.0",
-    "datatables" : "~1.10.7"
+    "jquery": ">=1.7.0",
+    "datatables": "~1.10.7"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.9.0",
+    "babel-preset-es2015": "^6.9.0"
   }
 }
