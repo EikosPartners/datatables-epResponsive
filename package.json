@@ -1,0 +1,29 @@
+{
+  "name": "datatables-epresponsive",
+  "version": "1.0.0",
+  "description": "Responsive plugin for datatables allowing column width definition through metadata",
+  "main": "dataTables.epResponsive.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EikosPartners/datatables-epResponsive.git"
+  },
+  "keywords": [
+    "datatables",
+    "grid",
+    "table",
+    "component"
+  ],
+  "author": "Jason Gardella <jason.a.gardella@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EikosPartners/datatables-epResponsive/issues"
+  },
+  "homepage": "https://github.com/EikosPartners/datatables-epResponsive#readme",
+  "dependencies": {
+    "datatables": "^1.10.12",
+    "jquery": "^2.2.4"
+  }
+}
