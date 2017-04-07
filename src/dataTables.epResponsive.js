@@ -9,7 +9,7 @@ import 'datatables';
 	(function(window, document, $, undefined) {
 
 		var resizeCallback,
-			responsiveOptions,
+			responsiveOptions = {},
 			ignoreColumns;
 
 		$.fn.dataTable.epResponsive = function ( inst ) {
@@ -23,10 +23,10 @@ import 'datatables';
 
 			ignoreColumns = columns.map(function() {
 				return false;
-			})
+			});
 
 			if(settings.oFeatures.bAutoWidth) {
-				console.error(ERROR_PREFIX + "Auto Width should be disabled.")
+				console.error(ERROR_PREFIX + "Auto Width should be disabled.");
 			}
 
 			// use default font size of 14px
@@ -44,7 +44,7 @@ import 'datatables';
 				} else if(match[2] === "px") {
 					return Number(match[1]);
 				}
-			}
+			};
 
 			// calculates the initial value for total width.
 			// this is equal to the summation of the widths of fixed columns
@@ -56,14 +56,14 @@ import 'datatables';
 					}
 				});
 				return totalWidth;
-			}
+			};
 
 			// sets the visibility of the column in datatables and in the metadata to the given value
 			this._set_column_visibility = function(idx, visible) {
 				if(idx < columns.length) {
 					api.column(idx).visible(visible, false); // disable redraw for performance
 				}
-			}
+			};
 
 			// hides columns that cannot fit within the table container's width
 			this._resize_cols = function () {
@@ -103,7 +103,7 @@ import 'datatables';
 				}
 
 				// hide fixed columns if needed
-				for(var i = columns.length - 1; i >= 0 && fixedColumnsOverflow > 0; i--) {
+				for(i = columns.length - 1; i >= 0 && fixedColumnsOverflow > 0; i--) {
 					if(!ignoreColumns[i] && columns[i].fixed) {
 						if(api.column(i).visible() !== false) {
 							visibilityChanged = true;
@@ -128,7 +128,9 @@ import 'datatables';
 
 				// only call resize callbacks if visibility actually changed
 				if(visibilityChanged) {
-					resizeCallback(hiddenColumns);
+                    if (resizeCallback && typeof resizeCallback === 'function') {
+                        resizeCallback(hiddenColumns);
+                    }
 				}
 			};
 
@@ -189,4 +191,4 @@ import 'datatables';
 				ignoreColumns[index] = bIgnore;
 			}
 		});
-	})(window, document, $)
+	})(window, document, $);

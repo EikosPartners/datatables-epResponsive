@@ -14,10 +14,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Feature Letter: R
  *
  */
-
 (function (window, document, $, undefined) {
 
-	var resizeCallback, responsiveOptions, ignoreColumns;
+	var resizeCallback,
+	    responsiveOptions = {},
+	    ignoreColumns;
 
 	$.fn.dataTable.epResponsive = function (inst) {
 		var api = new $.fn.dataTable.Api(inst);
@@ -110,7 +111,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 			}
 
 			// hide fixed columns if needed
-			for (var i = columns.length - 1; i >= 0 && fixedColumnsOverflow > 0; i--) {
+			for (i = columns.length - 1; i >= 0 && fixedColumnsOverflow > 0; i--) {
 				if (!ignoreColumns[i] && columns[i].fixed) {
 					if (api.column(i).visible() !== false) {
 						visibilityChanged = true;
@@ -135,7 +136,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 			// only call resize callbacks if visibility actually changed
 			if (visibilityChanged) {
-				resizeCallback(hiddenColumns);
+				if (resizeCallback && typeof resizeCallback === 'function') {
+					resizeCallback(hiddenColumns);
+				}
 			}
 		};
 
