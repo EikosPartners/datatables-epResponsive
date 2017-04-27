@@ -44,7 +44,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 		// parses width string to number. width can be provided in em, % or px
 		this._parse_width = function (widthString) {
-			var match = widthString.match(/(^[0-9]+)(.*$)/);
+			var match = widthString.match(/(^[0-9\.]+)(.*$)/);
 			if (match[2] === "em") {
 				return Number(match[1]) * CELL_FONT_SIZE;
 			} else if (match[2] === "%") {

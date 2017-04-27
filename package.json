@@ -1,6 +1,6 @@
 {
   "name": "datatables-epresponsive",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "The epResponsive plugin allows columns to be hidding as the window is resized, using metadata-defined column widths for the column definitions",
   "main": "dist/dataTables.epResponsive.js",
   "scripts": {
